@@ -63,7 +63,6 @@ src\main\java\com\in28minutes\HelloWorldController.java
 package com.in28minutes;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -72,8 +71,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class HelloWorldController {
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String sayHello(ModelMap model) {
-		model.addAttribute("greeting", "Hello World from Spring 4 MVC");
+	public String sayHello() {
 		return "welcome";
 	}
 }
@@ -112,7 +110,7 @@ src\main\webapp\WEB-INF\views\welcome.jsp
 <title>HelloWorld page</title>
 </head>
 <body>
-    Greeting : ${greeting}
+    Greetings from in28Minutes!!
 </body>
 </html>
 ```
