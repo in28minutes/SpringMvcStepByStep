@@ -17,11 +17,12 @@ https://github.com/in28minutes/SpringIn28Minutes/blob/master/InstallationGuide-J
 - Bootstrap to style the page
 - @ModelAttribute - List of values in a dropdown
 - Spring Security
-- Internationalization
+- Internationalization - Validation Messages
 - Exception Handling
 - Basic REST Services
 - Writing Unit Tests
 - Session Timeouts
+- Property Files
 - Logout
 ```
 @RequestMapping("/logout")
