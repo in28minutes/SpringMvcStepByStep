@@ -40,14 +40,7 @@ https://github.com/in28minutes/SpringIn28Minutes/blob/master/InstallationGuide-J
 - Step05.md : Lets add a form
 - Step06.md :	New Form and doPost
 - Step07.md :	Adding Password, validation of userid/password
-- Step11.md : More Refactoring - todo.jsp and TodoServlet
-- Step12.md	: First JSTL Tag : Using a Loop around todos	
-- Step13.md	: Add a Todo Form
-- Step14.md	: Storing User Name into Session	
-- Step15.md	: Delete Todo with equals and hashcode methods
-- Step16.md	: Adding webjars for jquery and bootstrap
-- Step17.md	: updating Bootstrap to 3.3.6
-- Step18.md	: Moving Add Functionality to a Separate Servlet
-- Step19.md	: Refactoring: list-todos.do,list-todos.jsp,ListTodosServlet
-- Step20.md	: Adding a Filter for More Security & Add a category for Todos
-- Step21.md	: Logout
+- Step11.md : Up and Running with Spring MVC
+- Step12.md : First Spring Controller
+- Step13.md	: Displaying a View - View Resolver
+- Step14.md	: Understand a Little Bit of Theory Behind Spring MVC

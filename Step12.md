@@ -1,8 +1,8 @@
-##Redirect to Login JSP
-- View Resolver in todo-servlet.xml
-- Update LoginController
-- Remove @ResponseBody
-- More about View Resolver
+#First Spring MVC Controller
+- @RequestMapping(value = "/login", method = RequestMethod.GET)
+- Why @ResponseBody?
+- Important of RequestMapping method
+- Can I have multiple urls rendered from Same Controller?
 
 ## Files List
 ### pom.xml
