@@ -5,13 +5,38 @@
 - More about View Resolver
 
 ## Files List
-### pom.xml
+### /LICENSE
+```
+The MIT License (MIT)
+
+Copyright (c) 2015 
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+```
+### /pom.xml
 ```
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.in28minutes</groupId>
-	<artifactId>in28Minutes-first-webapp</artifactId>
+	<artifactId>in28Minutes-springmvc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
@@ -58,7 +83,7 @@
 	</build>
 </project>
 ```
-### src/main/java/com/in28minutes/jee/LoginService.java
+### /src/main/java/com/in28minutes/jee/LoginService.java
 ```
 package com.in28minutes.jee;
 
@@ -69,7 +94,7 @@ public class LoginService {
 
 }
 ```
-### src/main/java/com/in28minutes/jee/LoginServlet.java
+### /src/main/java/com/in28minutes/jee/LoginServlet.java
 ```
 package com.in28minutes.jee;
 
@@ -114,7 +139,23 @@ public class LoginServlet extends HttpServlet {
 
 }
 ```
-### src/main/webapp/WEB-INF/todo-servlet.xml
+### /src/main/java/com/in28minutes/springmvc/login/LoginController.java
+```
+package com.in28minutes.springmvc.login;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+@Controller
+public class LoginController {
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String showLoginPage() {
+		return "login";
+	}
+}
+```
+### /src/main/webapp/WEB-INF/todo-servlet.xml
 ```
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:context="http://www.springframework.org/schema/context"
@@ -128,9 +169,19 @@ public class LoginServlet extends HttpServlet {
 
     <mvc:annotation-driven />
     
+    <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix">
+            <value>/WEB-INF/views/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>
+    
 </beans>
 ```
-### src/main/webapp/WEB-INF/views/login.jsp
+### /src/main/webapp/WEB-INF/views/login.jsp
 ```
 <html>
 <head>
@@ -144,7 +195,7 @@ public class LoginServlet extends HttpServlet {
 </body>
 </html>
 ```
-### src/main/webapp/WEB-INF/views/welcome.jsp
+### /src/main/webapp/WEB-INF/views/welcome.jsp
 ```
 <html>
 <head>
@@ -155,7 +206,7 @@ Welcome ${name}
 </body>
 </html>
 ```
-### src/main/webapp/WEB-INF/web.xml
+### /src/main/webapp/WEB-INF/web.xml
 ```
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
@@ -177,7 +228,7 @@ Welcome ${name}
 
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
-        <url-pattern>/spring-mvc/</url-pattern>
+        <url-pattern>/spring-mvc/*</url-pattern>
     </servlet-mapping>
 </web-app>
 ```
