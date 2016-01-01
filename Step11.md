@@ -48,8 +48,8 @@ Before we start with the Flows, we need to configure application to use Spring M
 					<version>3.2</version>
 					<configuration>
 						<verbose>true</verbose>
-						<source>1.7</source>
-						<target>1.7</target>
+						<source>1.8</source>
+						<target>1.8</target>
 						<showWarnings>true</showWarnings>
 					</configuration>
 				</plugin>

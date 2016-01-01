@@ -1,8 +1,7 @@
 ##What we will do:
-- Use LoginService to validate userid and password.
-- Remove all the old controller code and lets use only Spring MVC here on. 
-- For now : We are not using Spring Autowiring for LoginService.
-- Change URL to http://localhost:8080/login
+- Learn about Spring Auto-wiring and Dependency Management.
+- Use Auto-wiring to wire LoginService.
+- @Autowired, @Service
 
 ## Files List
 ### /pom.xml
@@ -68,18 +67,18 @@
 ```
 package com.in28minutes.login;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.in28minutes.login.LoginService;
-
 @Controller
 public class LoginController {
 
-	private LoginService loginService = new LoginService();
+	@Autowired
+	private LoginService loginService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String showLoginPage() {
@@ -104,6 +103,9 @@ public class LoginController {
 ```
 package com.in28minutes.login;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class LoginService {
 	public boolean validateUser(String user, String password) {
 		return user.equalsIgnoreCase("in28Minutes") && password.equals("dummy");
