@@ -45,6 +45,17 @@
 	</build>
 </project>
 ```
+\src\main\java\webapp\LoginService.java
+```
+package webapp;
+
+public class LoginService {
+	public boolean validateUser(String user, String password) {
+		return user.equalsIgnoreCase("in28Minutes") && password.equals("dummy");
+	}
+
+}
+```
 \src\main\java\webapp\LoginServlet.java
 ```
 package webapp;
@@ -57,27 +68,59 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 @WebServlet(urlPatterns = "/login.do")
 public class LoginServlet extends HttpServlet {
+
+	private LoginService service = new LoginService();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		request.setAttribute("name", request.getParameter("name"));
-		request.setAttribute("password", request.getParameter("password"));
 		request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		String name = request.getParameter("name");
+		String password = request.getParameter("password");
+
+		boolean isValidUser = service.validateUser(name, password);
+
+		if (isValidUser) {
+			request.setAttribute("name", name);
+			request.getRequestDispatcher("/WEB-INF/views/welcome.jsp").forward(request, response);
+		} else {
+			request.setAttribute("errorMessage", "Invalid Credentials!!");
+			request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+		}
 	}
 
 }
 ```
-\src\main\webapp\WEB-INF\views\login.jsp
+\\src\main\webapp\WEB-INF\views\login.jsp
 ```
 <html>
 <head>
 <title>Yahoo!!</title>
 </head>
 <body>
-My First JSP!!! My name is ${name} and password is ${password}
+	<p><font color="red">${errorMessage}</font></p>
+	<form action="/login.do" method="POST">
+		Name : <input name="name" type="text" /> Password : <input name="password" type="password" /> <input type="submit" />
+	</form>
+</body>
+</html>
+```
+\src\main\webapp\WEB-INF\views\welcome.jsp
+```
+<html>
+<head>
+<title>Yahoo!!</title>
+</head>
+<body>
+Welcome ${name}
 </body>
 </html>
 ```
@@ -93,6 +136,5 @@ My First JSP!!! My name is ${name} and password is ${password}
 	<welcome-file-list>
 		<welcome-file>login.do</welcome-file>
 	</welcome-file-list>
-
 </web-app>
 ```

@@ -1,10 +1,10 @@
-\pom.xml
+pom.xml
 ```
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.in28minutes</groupId>
-	<artifactId>in28Minutes-first-webapp</artifactId>
+	<artifactId>spring-mvc-first-web-app-step-by-step</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
@@ -45,7 +45,7 @@
 	</build>
 </project>
 ```
-\src\main\java\webapp\LoginServlet.java
+src\main\java\webapp\LoginServlet.java
 ```
 package webapp;
 
@@ -60,39 +60,41 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(urlPatterns = "/login.do")
 public class LoginServlet extends HttpServlet {
 
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		request.setAttribute("name", request.getParameter("name"));
-		request.setAttribute("password", request.getParameter("password"));
 		request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
 	}
-
 }
 ```
-\src\main\webapp\WEB-INF\views\login.jsp
+src\main\webapp\WEB-INF\views\login.jsp
 ```
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
 <html>
 <head>
 <title>Yahoo!!</title>
 </head>
 <body>
-My First JSP!!! My name is ${name} and password is ${password}
+My First JSP!!!
 </body>
 </html>
 ```
-\src\main\webapp\WEB-INF\web.xml
+src\main\webapp\WEB-INF\web.xml
 ```
 <!-- webapp/WEB-INF/web.xml -->
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-	version="3.0">
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    version="3.0">
 
-	<display-name>To do List</display-name>
+    <display-name>To do List</display-name>
 
-	<welcome-file-list>
-		<welcome-file>login.do</welcome-file>
-	</welcome-file-list>
+    <welcome-file-list>
+        <welcome-file>login.do</welcome-file>
+    </welcome-file-list>
 
 </web-app>
 ```

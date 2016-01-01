@@ -57,27 +57,47 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 @WebServlet(urlPatterns = "/login.do")
 public class LoginServlet extends HttpServlet {
+
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		request.setAttribute("name", request.getParameter("name"));
-		request.setAttribute("password", request.getParameter("password"));
 		request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		request.setAttribute("name", request.getParameter("name"));
+		request.getRequestDispatcher("/WEB-INF/views/welcome.jsp").forward(request, response);
 	}
 
 }
 ```
-\src\main\webapp\WEB-INF\views\login.jsp
+\\src\main\webapp\WEB-INF\views\login.jsp
 ```
 <html>
 <head>
 <title>Yahoo!!</title>
 </head>
 <body>
-My First JSP!!! My name is ${name} and password is ${password}
+	<form action="/login.do" method="POST">
+		Name : <input name="name" type="text" /> <input type="submit" />
+	</form>
+</body>
+</html>
+```
+\src\main\webapp\WEB-INF\views\welcome.jsp
+```
+<html>
+<head>
+<title>Yahoo!!</title>
+</head>
+<body>
+Welcome ${name}
 </body>
 </html>
 ```
@@ -93,6 +113,5 @@ My First JSP!!! My name is ${name} and password is ${password}
 	<welcome-file-list>
 		<welcome-file>login.do</welcome-file>
 	</welcome-file-list>
-
 </web-app>
 ```

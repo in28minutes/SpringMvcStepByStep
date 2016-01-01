@@ -1,10 +1,10 @@
-pom.xml
+\pom.xml
 ```
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.in28minutes</groupId>
-	<artifactId>spring-mvc-first-web-app-step-by-step</artifactId>
+	<artifactId>in28Minutes-first-webapp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
@@ -45,7 +45,7 @@ pom.xml
 	</build>
 </project>
 ```
-src\main\java\webapp\LoginServlet.java
+\src\main\java\webapp\LoginServlet.java
 ```
 package webapp;
 
@@ -57,10 +57,29 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/*
+ * Browser sends Http Request to Web Server
+ * 
+ * Code in Web Server => Input:HttpRequest, Output: HttpResponse
+ * JEE with Servlets
+ * 
+ * Web Server responds with Http Response
+ */
+
+//Java Platform, Enterprise Edition (Java EE) JEE6
+
+//Servlet is a Java programming language class 
+//used to extend the capabilities of servers 
+//that host applications accessed by means of 
+//a request-response programming model.
+
+//1. extends javax.servlet.http.HttpServlet
+//2. @WebServlet(urlPatterns = "/login.do")
+//3. doGet(HttpServletRequest request, HttpServletResponse response)
+//4. How is the response created?
+
 @WebServlet(urlPatterns = "/login.do")
 public class LoginServlet extends HttpServlet {
-
-	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -75,20 +94,21 @@ public class LoginServlet extends HttpServlet {
 		out.println("</html>");
 
 	}
+
 }
 ```
-src\main\webapp\WEB-INF\web.xml
+\src\main\webapp\WEB-INF\web.xml
 ```
 <!-- webapp/WEB-INF/web.xml -->
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-    version="3.0">
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
 
-    <display-name>To do List</display-name>
+	<display-name>To do List</display-name>
 
-    <welcome-file-list>
-        <welcome-file>login.do</welcome-file>
-    </welcome-file-list>
+	<welcome-file-list>
+		<welcome-file>login.do</welcome-file>
+	</welcome-file-list>
 
 </web-app>
 ```
