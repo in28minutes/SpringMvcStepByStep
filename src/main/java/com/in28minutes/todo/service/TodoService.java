@@ -2,6 +2,7 @@ package com.in28minutes.todo.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -30,14 +31,18 @@ public class TodoService {
 		return filteredTodos;
 	}
 
-	public void addTodo(String name, String desc, Date startDate, boolean isDone) {
-		todos.add(new Todo(++todoCount, name, desc, startDate, isDone));
+	public void addTodo(String name, String desc, Date targetDate,
+			boolean isDone) {
+		todos.add(new Todo(++todoCount, name, desc, targetDate, isDone));
 	}
 
 	public void deleteTodo(int id) {
-		for (Todo todo : todos) {
-			if (todo.getId() == id)
-				todos.remove(todo);
+		Iterator<Todo> iterator = todos.iterator();
+		while (iterator.hasNext()) {
+			Todo todo = iterator.next();
+			if (todo.getId() == id) {
+				iterator.remove();
+			}
 		}
 	}
 }

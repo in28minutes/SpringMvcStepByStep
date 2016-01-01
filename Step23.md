@@ -1,6 +1,16 @@
 ##What we will do:
-- Create TodoController  
-- Create list-todos.jsp
+- Display Todos in a table using JSTL Tags
+- <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+- Add Dependency for jstl
+
+
+```       
+       <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+```
 
 ## Files List
 ### /pom.xml
@@ -25,6 +35,12 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>4.2.3.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
 		</dependency>
 
 		<dependency>
@@ -75,6 +91,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
+@SessionAttributes("name")
 public class LoginController {
 
 	@Autowired
@@ -88,12 +105,10 @@ public class LoginController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String handleUserLogin(ModelMap model, @RequestParam String name,
 			@RequestParam String password) {
-
 		if (!loginService.validateUser(name, password)) {
 			model.put("errorMessage", "Invalid Credentials");
 			return "login";
 		}
-
 		model.put("name", name);
 		return "welcome";
 	}
@@ -260,25 +275,42 @@ public class TodoService {
 ```
 package com.in28minutes.todo;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.in28minutes.todo.service.TodoService;
 
 @Controller
+@SessionAttributes("name")
 public class TodoController {
 
 	@Autowired
 	private TodoService service;
 
 	@RequestMapping(value = "/list-todos", method = RequestMethod.GET)
-	public String showLoginPage(ModelMap model, String name) {
-		model.addAttribute("todos", service.retrieveTodos("in28Minutes"));
+	public String showTodosList(ModelMap model) {
+		String user = (String) model.get("name");
+		model.addAttribute("todos", service.retrieveTodos(user));
 		return "list-todos";
+	}
+
+	@RequestMapping(value = "/add-todo", method = RequestMethod.GET)
+	public String showTodoPage() {
+		return "todo";
+	}
+
+	@RequestMapping(value = "/add-todo", method = RequestMethod.POST)
+	public String addTodo(ModelMap model, @RequestParam String desc) {
+		service.addTodo((String) model.get("name"), desc, new Date(), false);
+		model.clear();// to prevent request parameter "name" to be passed
+		return "redirect:/list-todos";
 	}
 }
 ```
@@ -319,13 +351,38 @@ log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
 ```
 ### /src/main/webapp/WEB-INF/views/list-todos.jsp
 ```
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
 <title>Todos for ${name}</title>
 </head>
 <body>
-<H1>Your Todos</H1>
- ${todos}
+	<H1>Your Todos</H1>
+	<div>
+		<table>
+			<caption>Your Todos are</caption>
+
+			<thead>
+				<tr>
+					<th>Description</th>
+					<th>Date</th>
+					<th>Completed</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<c:forEach items="${todos}" var="todo">
+					<tr>
+						<td>${todo.desc}</td>
+						<td>${todo.targetDate}</td>
+						<td>${todo.done}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</div>
+
+	<a class="button" href="/add-todo">Add</a>
 </body>
 </html>
 ```
@@ -333,12 +390,25 @@ log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
 ```
 <html>
 <head>
-<title>Yahoo!!</title>
+<title>Login Page</title>
 </head>
 <body>
     <p><font color="red">${errorMessage}</font></p>
     <form action="/login" method="POST">
         Name : <input name="name" type="text" /> Password : <input name="password" type="password" /> <input type="submit" />
+    </form>
+</body>
+</html>
+```
+### /src/main/webapp/WEB-INF/views/todo.jsp
+```
+<html>
+<head>
+<title>Login Page</title>
+</head>
+<body>
+    <form action="/add-todo" method="POST">
+        Description : <input name="desc" type="text" /> <input type="submit" value="add" />
     </form>
 </body>
 </html>

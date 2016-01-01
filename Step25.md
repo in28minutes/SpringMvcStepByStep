@@ -1,7 +1,11 @@
 ##What we will do:
-- Create TodoController  
-- Create list-todos.jsp
+- Add functionality to delete a todo
 
+## Useful Snippets
+```     
+	<a type="button" class="btn btn-warning" 
+		href="/delete-todo?id=${todo.id}">Delete</a>
+```
 ## Files List
 ### /pom.xml
 ```
@@ -27,6 +31,23 @@
 			<version>4.2.3.RELEASE</version>
 		</dependency>
 
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>3.3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>1.9.1</version>
+        </dependency>
+        
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -75,6 +96,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
+@SessionAttributes("name")
 public class LoginController {
 
 	@Autowired
@@ -88,12 +110,10 @@ public class LoginController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String handleUserLogin(ModelMap model, @RequestParam String name,
 			@RequestParam String password) {
-
 		if (!loginService.validateUser(name, password)) {
 			model.put("errorMessage", "Invalid Credentials");
 			return "login";
 		}
-
 		model.put("name", name);
 		return "welcome";
 	}
@@ -241,7 +261,8 @@ public class TodoService {
 		return filteredTodos;
 	}
 
-	public void addTodo(String name, String desc, Date targetDate, boolean isDone) {
+	public void addTodo(String name, String desc, Date targetDate,
+			boolean isDone) {
 		todos.add(new Todo(++todoCount, name, desc, targetDate, isDone));
 	}
 
@@ -260,26 +281,51 @@ public class TodoService {
 ```
 package com.in28minutes.todo;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.in28minutes.todo.service.TodoService;
 
 @Controller
+@SessionAttributes("name")
 public class TodoController {
 
 	@Autowired
 	private TodoService service;
 
 	@RequestMapping(value = "/list-todos", method = RequestMethod.GET)
-	public String showLoginPage(ModelMap model, String name) {
-		model.addAttribute("todos", service.retrieveTodos("in28Minutes"));
+	public String showTodosList(ModelMap model) {
+		String user = (String) model.get("name");
+		model.addAttribute("todos", service.retrieveTodos(user));
 		return "list-todos";
 	}
+
+	@RequestMapping(value = "/add-todo", method = RequestMethod.GET)
+	public String showTodoPage() {
+		return "todo";
+	}
+
+	@RequestMapping(value = "/add-todo", method = RequestMethod.POST)
+	public String addTodo(ModelMap model, @RequestParam String desc) {
+		service.addTodo((String) model.get("name"), desc, new Date(), false);
+		model.clear();// to prevent request parameter "name" to be passed
+		return "redirect:/list-todos";
+	}
+
+	@RequestMapping(value = "/delete-todo", method = RequestMethod.GET)
+	public String deleteTodo(@RequestParam int id) {
+		service.deleteTodo(id);
+
+		return "redirect:/list-todos";
+	}
+
 }
 ```
 ### /src/main/resources/log4j.properties
@@ -315,17 +361,52 @@ log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
         </property>
     </bean>
     
+    <mvc:resources mapping="/webjars/**" location="/webjars/"/>
+    
 </beans>
 ```
 ### /src/main/webapp/WEB-INF/views/list-todos.jsp
 ```
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
 <title>Todos for ${name}</title>
+<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+    rel="stylesheet">
 </head>
 <body>
-<H1>Your Todos</H1>
- ${todos}
+	<div class="container">
+		<table class="table table-striped">
+			<caption>Your Todos are</caption>
+			<thead>
+				<tr>
+					<th>Description</th>
+					<th>Date</th>
+					<th>Completed</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${todos}" var="todo">
+					<tr>
+						<td>${todo.desc}</td>
+						<td>${todo.targetDate}</td>
+						<td>${todo.done}</td>
+						<td>
+							<a type="button" class="btn btn-warning" 
+								href="/delete-todo?id=${todo.id}">Delete</a>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<div>
+			<a type="button" class="btn btn-success" href="/add-todo">Add</a>
+		</div>
+	</div>
+
+	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </body>
 </html>
 ```
@@ -333,12 +414,25 @@ log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
 ```
 <html>
 <head>
-<title>Yahoo!!</title>
+<title>Login Page</title>
 </head>
 <body>
     <p><font color="red">${errorMessage}</font></p>
     <form action="/login" method="POST">
         Name : <input name="name" type="text" /> Password : <input name="password" type="password" /> <input type="submit" />
+    </form>
+</body>
+</html>
+```
+### /src/main/webapp/WEB-INF/views/todo.jsp
+```
+<html>
+<head>
+<title>Login Page</title>
+</head>
+<body>
+    <form action="/add-todo" method="POST">
+        Description : <input name="desc" type="text" /> <input type="submit" value="add" />
     </form>
 </body>
 </html>
