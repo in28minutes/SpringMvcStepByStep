@@ -13,12 +13,15 @@ https://github.com/in28minutes/SpringIn28Minutes/blob/master/InstallationGuide-J
 - DispatcherServlet
 - Model, Controllers, ViewResolver and Interceptors 
 - Forms - DataBinding, Validation
-- Annotation based approach - @RequestParam, @PathVariable etc
+- Annotation based approach - @RequestParam, @PathVariable, @ModelAttribute, @SessionAttributes etc
 - Bootstrap to style the page
+- @ModelAttribute - List of values in a dropdown
 - Spring Security
 - Internationalization
 - Exception Handling
 - Basic REST Services
+- Writing Unit Tests
+- Session Timeouts
 
 ##Our Approach
 - Instead of taking traditional approach, feature-by-feature, we will take a problem-solution step-by-step approach. 
