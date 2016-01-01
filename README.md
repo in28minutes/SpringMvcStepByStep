@@ -22,6 +22,14 @@ https://github.com/in28minutes/SpringIn28Minutes/blob/master/InstallationGuide-J
 - Basic REST Services
 - Writing Unit Tests
 - Session Timeouts
+- Logout
+```
+@RequestMapping("/logout")
+public String logout(SessionStatus status){
+  status.setComplete();
+  return "login";
+}
+```
 
 ##Our Approach
 - Instead of taking traditional approach, feature-by-feature, we will take a problem-solution step-by-step approach. 

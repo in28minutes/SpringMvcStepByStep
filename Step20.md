@@ -2,6 +2,8 @@
 - Session vs Model vs Request.
 - Be cautious about what you use Session for.
 - @SessionAttributes("name") and how it works?
+- Why use Model?  "adding elements directly to the HttpServletRequest (as request attributes) would seem to serve the same purpose.  The reason to do this is obvious when taking a look at one of the requirements we have set for the MVC framework:  It should be as view-agnostic as possible, which means we’d like to be able to incorporate view technologies not bound to the HttpServletRequest as well." - Rod Johnson et. al’s book Professional Java Development with the Spring Framework 
+- Spring documentation states that the @SessionAttributes annotation “list the names of model attributes which should be transparently stored in the session or some conversational storage.” 
 
 ## Files List
 ### /pom.xml
