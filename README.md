@@ -25,7 +25,7 @@ https://github.com/in28minutes/SpringIn28Minutes/blob/master/InstallationGuide-J
 - We will use 80-20 Rule. We discuss the 20% things used 80% of time in depth. We touch upon other things briefly equipping you with enough knowledge to find out more on your own. 
 - We will be developing a demo application in the course, which could be reused in your projects, saving hours of your effort.
 - All the code is available on Github, step by step.
-- We will use the latest releases from Spring, like Spring Framework 4.
+- We will use Spring, Spring MVC 4.x.
 
 ##Expectations
 - For taking this course, you should already know Java. 

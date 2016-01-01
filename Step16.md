@@ -1,17 +1,8 @@
-##Todo: 
-- Starting Point - End of Step 7 : Take code from there and make it available in this repo.
-- Add the code from first 7 steps to this repo.
-
-##Flows:
-- Flow 1. Login Servlet -> GET -> login.jsp
-- Flow 2. Login Servlet -> POST (Success) -> welcome.jsp
-- Flow 3. Login Servlet -> POST (Failure) -> login.jsp (with error message)
-
-Before we start with the Flows, we need to configure application to use Spring MVC
-- Lets do a little bit of Refactoring. Mini Step 1: Rename package webapp to com.in28minutes.jee
-- We need Spring MVC Framework and its dependencies. Mini Step 2 : Add required jars to the project
-- Spring MVC uses Front Controller Pattern -> Dispatcher Servlet. Mini Step 3 : Add Dispatcher Servlet to web.xml
-- DispatcherServlet needs an Spring Application Context to launch. We will create an xml (/WEB-INF/todo-servlet.xml). Mini Step 4: Add Spring Context
+##What we will do:
+- Use LoginService to validate userid and password.
+- Remove all the old controller code and lets use only Spring MVC here on. 
+- For now : We are not using Spring Autowiring for LoginService.
+- Change URL to http://localhost:8080/login
 
 ## Files List
 ### /pom.xml
@@ -36,6 +27,12 @@ Before we start with the Flows, we need to configure application to use Spring M
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>4.2.3.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
 		</dependency>
 	</dependencies>
 
@@ -67,9 +64,45 @@ Before we start with the Flows, we need to configure application to use Spring M
 	</build>
 </project>
 ```
-### /src/main/java/com/in28minutes/jee/LoginService.java
+### /src/main/java/com/in28minutes/login/LoginController.java
 ```
-package com.in28minutes.jee;
+package com.in28minutes.login;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.in28minutes.login.LoginService;
+
+@Controller
+public class LoginController {
+
+	private LoginService loginService = new LoginService();
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String showLoginPage() {
+		return "login";
+	}
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public String handleUserLogin(ModelMap model, @RequestParam String name,
+			@RequestParam String password) {
+
+		if (!loginService.validateUser(name, password)) {
+			model.put("errorMessage", "Invalid Credentials");
+			return "login";
+		}
+
+		model.put("name", name);
+		return "welcome";
+	}
+}
+```
+### /src/main/java/com/in28minutes/login/LoginService.java
+```
+package com.in28minutes.login;
 
 public class LoginService {
 	public boolean validateUser(String user, String password) {
@@ -78,50 +111,14 @@ public class LoginService {
 
 }
 ```
-### /src/main/java/com/in28minutes/jee/LoginServlet.java
+### /src/main/resources/log4j.properties
 ```
-package com.in28minutes.jee;
-
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-@WebServlet(urlPatterns = "/login.do")
-public class LoginServlet extends HttpServlet {
-
-	private LoginService service = new LoginService();
-
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException {
-		request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(
-				request, response);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException {
-		String name = request.getParameter("name");
-		String password = request.getParameter("password");
-
-		boolean isValidUser = service.validateUser(name, password);
-
-		if (isValidUser) {
-			request.setAttribute("name", name);
-			request.getRequestDispatcher("/WEB-INF/views/welcome.jsp").forward(
-					request, response);
-		} else {
-			request.setAttribute("errorMessage", "Invalid Credentials!!");
-			request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(
-					request, response);
-		}
-	}
-
-}
+log4j.rootLogger=TRACE, Appender1, Appender2
+ 
+log4j.appender.Appender1=org.apache.log4j.ConsoleAppender
+log4j.appender.Appender1.layout=org.apache.log4j.PatternLayout
+log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
+ 
 ```
 ### /src/main/webapp/WEB-INF/todo-servlet.xml
 ```
@@ -137,6 +134,16 @@ public class LoginServlet extends HttpServlet {
 
     <mvc:annotation-driven />
     
+    <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix">
+            <value>/WEB-INF/views/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>
+    
 </beans>
 ```
 ### /src/main/webapp/WEB-INF/views/login.jsp
@@ -147,7 +154,7 @@ public class LoginServlet extends HttpServlet {
 </head>
 <body>
     <p><font color="red">${errorMessage}</font></p>
-    <form action="/login.do" method="POST">
+    <form action="/login" method="POST">
         Name : <input name="name" type="text" /> Password : <input name="password" type="password" /> <input type="submit" />
     </form>
 </body>
@@ -160,7 +167,7 @@ public class LoginServlet extends HttpServlet {
 <title>Yahoo!!</title>
 </head>
 <body>
-Welcome ${name}
+Welcome ${name}. You are now authenticated.
 </body>
 </html>
 ```
@@ -186,7 +193,7 @@ Welcome ${name}
 
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
-        <url-pattern>/spring-mvc/</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>
 ```
