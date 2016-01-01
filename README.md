@@ -15,7 +15,6 @@ https://github.com/in28minutes/SpringIn28Minutes/blob/master/InstallationGuide-J
 - Forms - DataBinding, Validation
 - Annotation based approach - @RequestParam, @PathVariable, @ModelAttribute, @SessionAttributes etc
 - Bootstrap to style the page
-- @ModelAttribute - List of values in a dropdown
 - Spring Security
 - Internationalization - Validation Messages
 - Exception Handling
@@ -56,3 +55,7 @@ public String logout(SessionStatus status){
 - Step12.md : First Spring Controller
 - Step13.md	: Displaying a View - View Resolver
 - Step14.md	: Understand a Little Bit of Theory Behind Spring MVC
+
+##Exercises
+- Split TodoController into different Controllers
+- Use same TodoController for both updates and new todo
