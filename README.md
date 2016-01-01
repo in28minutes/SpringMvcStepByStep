@@ -1,3 +1,7 @@
+#Todo
+Top Navigation Bar
+Move Headers and formatting to separate include files
+
 # First Spring MVC Application in 25 Easy Steps
 ## Spring MVC Tutorial for Beginners
 ##Installing Eclipse and Java
@@ -59,3 +63,4 @@ public String logout(SessionStatus status){
 ##Exercises
 - Split TodoController into different Controllers
 - Use same TodoController for both updates and new todo
+- Functionality to mark a Todo as complete
