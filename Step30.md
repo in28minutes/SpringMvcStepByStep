@@ -1,27 +1,8 @@
 ##What we will do:
-- Add a navigation bar
-- Use JSP Fragments
-
-- Exercise : Align the login & welcome pages.
-- Exercise : Highlight the correct menu item.
+- Spring Security
 
 ## Useful Snippets
 ```
-<nav role="navigation" class="navbar navbar-default">
-
-	<div class="">
-		<a href="/" class="navbar-brand">in28Minutes</a>
-	</div>
-
-	<div class="navbar-collapse">
-		<ul class="nav navbar-nav">
-			<li class="active"><a href="/login">Home</a></li>
-			<li><a href="/list-todos">Todos</a></li>
-			<li><a href="http://www.in28minutes.com">In28Minutes</a></li>
-		</ul>
-	</div>
-
-</nav>
 ```
 
 ## Files List
@@ -46,8 +27,20 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>4.2.3.RELEASE</version>
+			<version>4.2.2.RELEASE</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>4.0.1.RELEASE</version>
+		</dependency>
+		
+       <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>4.0.1.RELEASE</version>
+        </dependency>		
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -71,11 +64,11 @@
 			<artifactId>bootstrap-datepicker</artifactId>
 			<version>1.0.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>5.0.1.Final</version>
+			<version>5.0.2.Final</version>
 		</dependency>
 
 		<dependency>
@@ -117,12 +110,17 @@
 ```
 package com.in28minutes.login;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
@@ -132,20 +130,20 @@ public class LoginController {
 	@Autowired
 	private LoginService loginService;
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String showLoginPage() {
-		return "login";
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logoutPage(HttpServletRequest request,
+			HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext()
+				.getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		return "redirect:/list-todos";
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String handleUserLogin(ModelMap model, @RequestParam String name,
-			@RequestParam String password) {
-		if (!loginService.validateUser(name, password)) {
-			model.put("errorMessage", "Invalid Credentials");
-			return "login";
-		}
-		model.put("name", name);
-		return "welcome";
+	@RequestMapping(value = "/access-denied", method = RequestMethod.GET)
+	public String accessDeniedPage(ModelMap model) {
+		return "access-denied";
 	}
 }
 ```
@@ -267,6 +265,37 @@ public class Todo {
 
 }
 ```
+### /src/main/java/com/in28minutes/security/SecurityConfiguration.java
+```
+package com.in28minutes.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+	@Autowired
+	public void configureGlobalSecurity(AuthenticationManagerBuilder auth)
+			throws Exception {
+		auth.inMemoryAuthentication().withUser("in28Minutes").password("dummy")
+				.roles("USER", "ADMIN");
+	}
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests().antMatchers("/login").permitAll()
+				.antMatchers("/", "/*todo*/**").access("hasRole('USER')").and()
+				.formLogin().and().exceptionHandling()
+				.accessDeniedPage("/access-denied");
+	}
+}
+```
 ### /src/main/java/com/in28minutes/todo/service/TodoService.java
 ```
 package com.in28minutes.todo.service;
@@ -342,6 +371,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -369,10 +400,9 @@ public class TodoController {
 				dateFormat, false));
 	}
 
-	@RequestMapping(value = "/list-todos", method = RequestMethod.GET)
+	@RequestMapping(value = { "/", "/list-todos" }, method = RequestMethod.GET)
 	public String showTodosList(ModelMap model) {
-		String user = (String) model.get("name");
-		model.addAttribute("todos", service.retrieveTodos(user));
+		model.addAttribute("todos", service.retrieveTodos(getPrincipal()));
 		return "list-todos";
 	}
 
@@ -388,8 +418,8 @@ public class TodoController {
 		if (result.hasErrors())
 			return "todo";
 
-		service.addTodo((String) model.get("name"), todo.getDesc(),
-				todo.getTargetDate(), false);
+		service.addTodo(getPrincipal(), todo.getDesc(), todo.getTargetDate(),
+				false);
 		model.clear();// to prevent request parameter "name" to be passed
 		return "redirect:/list-todos";
 	}
@@ -406,7 +436,7 @@ public class TodoController {
 		if (result.hasErrors())
 			return "todo";
 
-		todo.setUser((String) model.get("name"));
+		todo.setUser(getPrincipal());
 		service.updateTodo(todo);
 
 		model.clear();// to prevent request parameter "name" to be passed
@@ -418,6 +448,19 @@ public class TodoController {
 		service.deleteTodo(id);
 
 		return "redirect:/list-todos";
+	}
+
+	private String getPrincipal() {
+		String userName = null;
+		Object principal = SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails) {
+			userName = ((UserDetails) principal).getUsername();
+		} else {
+			userName = principal.toString();
+		}
+		return userName;
 	}
 
 }
@@ -459,6 +502,10 @@ log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
     
 </beans>
 ```
+### /src/main/webapp/WEB-INF/views/access-denied.jsp
+```
+Access Denied
+```
 ### /src/main/webapp/WEB-INF/views/common/footer.jspf
 ```
 
@@ -495,9 +542,12 @@ log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
 
 	<div class="navbar-collapse">
 		<ul class="nav navbar-nav">
-			<li class="active"><a href="/login">Home</a></li>
+			<li class="active"><a href="/">Home</a></li>
 			<li><a href="/list-todos">Todos</a></li>
 			<li><a href="http://www.in28minutes.com">In28Minutes</a></li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+			<li><a href="/logout">Logout</a></li>
 		</ul>
 	</div>
 
@@ -629,5 +679,16 @@ log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+   <filter>
+    		<filter-name>springSecurityFilterChain</filter-name>
+    		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+   </filter>
+ 
+   <filter-mapping>
+   		<filter-name>springSecurityFilterChain</filter-name>
+    		<url-pattern>/*</url-pattern>
+   </filter-mapping> 
+    
 </web-app>
 ```
