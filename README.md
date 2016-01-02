@@ -1,8 +1,5 @@
 #Todo
-- Internationalization - Validation Messages
 - Basic REST Services
-- Session Timeouts
-- Property Files
 
 # First Spring MVC Application in 25 Easy Steps
 ## Spring MVC Tutorial for Beginners
