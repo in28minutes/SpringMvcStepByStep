@@ -1,6 +1,11 @@
 #Todo
-Top Navigation Bar
-Move Headers and formatting to separate include files
+- Spring Security
+- Internationalization - Validation Messages
+- Exception Handling
+- Basic REST Services
+- Session Timeouts
+- Property Files
+- Logout
 
 # First Spring MVC Application in 25 Easy Steps
 ## Spring MVC Tutorial for Beginners
@@ -23,7 +28,6 @@ https://github.com/in28minutes/SpringIn28Minutes/blob/master/InstallationGuide-J
 - Internationalization - Validation Messages
 - Exception Handling
 - Basic REST Services
-- Writing Unit Tests
 - Session Timeouts
 - Property Files
 - Logout
@@ -64,3 +68,6 @@ public String logout(SessionStatus status){
 - Split TodoController into different Controllers
 - Use same TodoController for both updates and new todo
 - Functionality to mark a Todo as complete
+
+##Future Things To Do
+- Unit Tests - WTF - why are they not here in the first set?
