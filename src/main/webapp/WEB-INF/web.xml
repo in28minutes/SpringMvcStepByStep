@@ -30,5 +30,8 @@
    		<filter-name>springSecurityFilterChain</filter-name>
     		<url-pattern>/*</url-pattern>
    </filter-mapping> 
-    
+   
+    <error-page>
+	    <location>/WEB-INF/views/error.jsp</location>
+	</error-page>
 </web-app>

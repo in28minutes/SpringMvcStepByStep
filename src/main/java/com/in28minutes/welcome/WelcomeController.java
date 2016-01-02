@@ -1,4 +1,4 @@
-package com.in28minutes.login;
+package com.in28minutes.welcome;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

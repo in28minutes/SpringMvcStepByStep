@@ -1,4 +1,4 @@
-package com.in28minutes.login;
+package com.in28minutes.common;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
