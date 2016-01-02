@@ -17,7 +17,7 @@
 		<dependency>
     			<groupId>org.hibernate</groupId>
     			<artifactId>hibernate-validator</artifactId>
-    			<version>5.0.1.Final</version>
+    			<version>5.0.2.Final</version>
  		</dependency>
 
 		@Size(min = 10, message = "Enter atleast 10 Characters.")
@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>4.2.3.RELEASE</version>
+			<version>4.2.2.RELEASE</version>
 		</dependency>
 
 		<dependency>
@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>5.0.1.Final</version>
+			<version>5.0.2.Final</version>
 		</dependency>
 		
 		<dependency>

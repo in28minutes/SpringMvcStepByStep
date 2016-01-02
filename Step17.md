@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>4.2.3.RELEASE</version>
+			<version>4.2.2.RELEASE</version>
 		</dependency>
 
 		<dependency>

@@ -1,28 +1,37 @@
 ##What we will do:
-- Add Update Functionality
-- Lets Use the Same JSP as earlier.
+- Remove Hardcoding of User Name
+- Remove LoginService
+- Rename LoginController to WelcomeController
+- Add Logout Functionality
 
 ## Useful Snippets
 ```
-	public Todo retrieveTodo(int id) {
-		for (Todo todo : todos) {
-			if (todo.getId() == id)
-				return todo;
+	private String getLoggedInUserName(ModelMap model) {
+		Object principal = SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails)
+			return ((UserDetails) principal).getUsername();
+
+		return principal.toString();
+	}
+
+		<ul class="nav navbar-nav navbar-right">
+			<li><a href="/logout">Logout</a></li>
+		</ul>
+
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(HttpServletRequest request,
+			HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext()
+				.getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
 		}
-		return null;
+		return "redirect:/";
 	}
 
-	public void updateTodo(Todo todo) {
-		todos.remove(todo);
-		todos.add(todo);
-	}
-   
-   todo.setUser((String) model.get("name"));
-   service.updateTodo(todo);
-   
-   <form:hidden path="id"/>  
 ```
-
 ## Files List
 ### /pom.xml
 ```
@@ -49,6 +58,18 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>4.0.1.RELEASE</version>
+  		</dependency>
+
+       <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>4.0.1.RELEASE</version>
+        </dependency>	
+
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
@@ -66,11 +87,17 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap-datepicker</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>5.0.2.Final</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -106,52 +133,63 @@
 	</build>
 </project>
 ```
-### /src/main/java/com/in28minutes/login/LoginController.java
+### /src/main/java/com/in28minutes/login/LogoutController.java
 ```
 package com.in28minutes.login;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+@Controller
+public class LogoutController {
+
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(HttpServletRequest request,
+			HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext()
+				.getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		return "redirect:/";
+	}
+}
+```
+### /src/main/java/com/in28minutes/login/WelcomeController.java
+```
+package com.in28minutes.login;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes("name")
-public class LoginController {
+public class WelcomeController {
 
-	@Autowired
-	private LoginService loginService;
-
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String showLoginPage() {
-		return "login";
-	}
-
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String handleUserLogin(ModelMap model, @RequestParam String name,
-			@RequestParam String password) {
-		if (!loginService.validateUser(name, password)) {
-			model.put("errorMessage", "Invalid Credentials");
-			return "login";
-		}
-		model.put("name", name);
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String showWelcomePage(ModelMap model) {
+		model.put("name", getLoggedInUserName());
 		return "welcome";
 	}
-}
-```
-### /src/main/java/com/in28minutes/login/LoginService.java
-```
-package com.in28minutes.login;
 
-import org.springframework.stereotype.Service;
+	private String getLoggedInUserName() {
+		Object principal = SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
 
-@Service
-public class LoginService {
-	public boolean validateUser(String user, String password) {
-		return user.equalsIgnoreCase("in28Minutes") && password.equals("dummy");
+		if (principal instanceof UserDetails)
+			return ((UserDetails) principal).getUsername();
+
+		return principal.toString();
 	}
 
 }
@@ -260,6 +298,36 @@ public class Todo {
 
 }
 ```
+### /src/main/java/com/in28minutes/security/SecurityConfiguration.java
+```
+package com.in28minutes.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+	@Autowired
+	public void configureGlobalSecurity(AuthenticationManagerBuilder auth)
+			throws Exception {
+		auth.inMemoryAuthentication().withUser("in28Minutes").password("dummy")
+				.roles("USER", "ADMIN");
+	}
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests().antMatchers("/login").permitAll()
+				.antMatchers("/", "/*todo*/**").access("hasRole('USER')").and()
+				.formLogin();
+	}
+}
+```
 ### /src/main/java/com/in28minutes/todo/service/TodoService.java
 ```
 package com.in28minutes.todo.service;
@@ -328,32 +396,43 @@ public class TodoService {
 ```
 package com.in28minutes.todo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.in28minutes.model.Todo;
 import com.in28minutes.todo.service.TodoService;
 
 @Controller
-@SessionAttributes("name")
 public class TodoController {
 
 	@Autowired
 	private TodoService service;
 
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(
+				dateFormat, false));
+	}
+
 	@RequestMapping(value = "/list-todos", method = RequestMethod.GET)
 	public String showTodosList(ModelMap model) {
-		String user = (String) model.get("name");
+		String user = getLoggedInUserName();
 		model.addAttribute("todos", service.retrieveTodos(user));
 		return "list-todos";
 	}
@@ -370,10 +449,20 @@ public class TodoController {
 		if (result.hasErrors())
 			return "todo";
 
-		service.addTodo((String) model.get("name"), todo.getDesc(), new Date(),
-				false);
+		service.addTodo(getLoggedInUserName(), todo.getDesc(),
+				todo.getTargetDate(), false);
 		model.clear();// to prevent request parameter "name" to be passed
 		return "redirect:/list-todos";
+	}
+
+	private String getLoggedInUserName() {
+		Object principal = SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails)
+			return ((UserDetails) principal).getUsername();
+
+		return principal.toString();
 	}
 
 	@RequestMapping(value = "/update-todo", method = RequestMethod.GET)
@@ -388,7 +477,7 @@ public class TodoController {
 		if (result.hasErrors())
 			return "todo";
 
-		todo.setUser((String) model.get("name"));
+		todo.setUser(getLoggedInUserName());
 		service.updateTodo(todo);
 
 		model.clear();// to prevent request parameter "name" to be passed
@@ -441,108 +530,129 @@ log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
     
 </beans>
 ```
-### /src/main/webapp/WEB-INF/views/list-todos.jsp
+### /src/main/webapp/WEB-INF/views/common/footer.jspf
 ```
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<html>
-<head>
-<title>Todos for ${name}</title>
-<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
-    rel="stylesheet">
-</head>
-<body>
-	<div class="container">
-		<table class="table table-striped">
-			<caption>Your Todos are</caption>
-			<thead>
-				<tr>
-					<th>Description</th>
-					<th>Date</th>
-					<th>Completed</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach items="${todos}" var="todo">
-					<tr>
-						<td>${todo.desc}</td>
-						<td>${todo.targetDate}</td>
-						<td>${todo.done}</td>
-						<td>
-							<a type="button" class="btn btn-primary" 
-								href="/update-todo?id=${todo.id}">Edit</a>
 
-							<a type="button" class="btn btn-warning" 
-								href="/delete-todo?id=${todo.id}">Delete</a>
-						</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-		<div>
-			<a type="button" class="btn btn-success" href="/add-todo">Add</a>
-		</div>
-	</div>
+<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script
+	src="webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js"></script>
 
-	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
-    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </body>
 </html>
 ```
-### /src/main/webapp/WEB-INF/views/login.jsp
-```
-<html>
-<head>
-<title>Login Page</title>
-</head>
-<body>
-    <p><font color="red">${errorMessage}</font></p>
-    <form action="/login" method="POST">
-        Name : <input name="name" type="text" /> Password : <input name="password" type="password" /> <input type="submit" />
-    </form>
-</body>
-</html>
-```
-### /src/main/webapp/WEB-INF/views/todo.jsp
+### /src/main/webapp/WEB-INF/views/common/header.jspf
 ```
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <html>
 <head>
-<title>Your Todo</title>
+<title>Todos Application</title>
 <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
 	rel="stylesheet">
 </head>
+
 <body>
 
-	<div class="container">
-		<form:form method="post" commandName="todo">
-			<form:hidden path="id"/>
-			<fieldset class="form-group">
-				<form:label path="desc">Description</form:label>
-				<form:input path="desc" type="text" class="form-control"
-					required="required"/>
-				<form:errors path="desc" cssClass="text-warning" />
-			</fieldset>
-			<button type="submit" class="btn btn-success">Submit</button>
-		</form:form>
+```
+### /src/main/webapp/WEB-INF/views/common/navigation.jspf
+```
+<nav role="navigation" class="navbar navbar-default">
+
+	<div class="">
+		<a href="http://www.in28minutes.com" class="navbar-brand">in28Minutes</a>
 	</div>
 
-	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
-	<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<div class="navbar-collapse">
+		<ul class="nav navbar-nav">
+			<li class="active"><a href="/">Home</a></li>
+			<li><a href="/list-todos">Todos</a></li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+			<li><a href="/logout">Logout</a></li>
+		</ul>
+	</div>
 
-</body>
-</html>
+</nav>
+```
+### /src/main/webapp/WEB-INF/views/list-todos.jsp
+```
+<%@ include file="common/header.jspf"%>
+<%@ include file="common/navigation.jspf"%>
+
+<div class="container">
+	<table class="table table-striped">
+		<caption>Your Todos are</caption>
+		<thead>
+			<tr>
+				<th>Description</th>
+				<th>Date</th>
+				<th>Completed</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach items="${todos}" var="todo">
+				<tr>
+					<td>${todo.desc}</td>
+					<td><fmt:formatDate pattern="dd/MM/yyyy"
+							value="${todo.targetDate}" /></td>
+					<td>${todo.done}</td>
+					<td><a type="button" class="btn btn-primary"
+						href="/update-todo?id=${todo.id}">Edit</a> <a type="button"
+						class="btn btn-warning" href="/delete-todo?id=${todo.id}">Delete</a>
+					</td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+	<div>
+		<a type="button" class="btn btn-success" href="/add-todo">Add</a>
+	</div>
+</div>
+<%@ include file="common/footer.jspf"%>
+```
+### /src/main/webapp/WEB-INF/views/todo.jsp
+```
+<%@ include file="common/header.jspf"%>
+<%@ include file="common/navigation.jspf"%>
+<div class="container">
+	<form:form method="post" commandName="todo">
+		<form:hidden path="id" />
+		<fieldset class="form-group">
+			<form:label path="desc">Description</form:label>
+			<form:input path="desc" type="text" class="form-control"
+				required="required" />
+			<form:errors path="desc" cssClass="text-warning" />
+		</fieldset>
+		<fieldset class="form-group">
+			<form:label path="targetDate">Target Date</form:label>
+			<form:input path="targetDate" type="text" class="form-control"
+				required="required" />
+			<form:errors path="targetDate" cssClass="text-warning" />
+		</fieldset>
+		<button type="submit" class="btn btn-success">Submit</button>
+	</form:form>
+</div>
+
+<%@ include file="common/footer.jspf"%>
+
+<script>
+	$('#targetDate').datepicker({
+		format : 'dd/mm/yyyy'
+	});
+</script>
 ```
 ### /src/main/webapp/WEB-INF/views/welcome.jsp
 ```
-<html>
-<head>
-<title>Yahoo!!</title>
-</head>
-<body>
-Welcome ${name}. You are now authenticated. <a href="/list-todos">Click here</a> to start maintaining your todo's.
-</body>
-</html>
+<%@ include file="common/header.jspf"%>
+<%@ include file="common/navigation.jspf"%>
+<div class="container">
+	Welcome ${name}. You are now authenticated.
+</div>
+
+<%@ include file="common/footer.jspf"%>
 ```
 ### /src/main/webapp/WEB-INF/web.xml
 ```
@@ -568,5 +678,17 @@ Welcome ${name}. You are now authenticated. <a href="/list-todos">Click here</a>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    
+   <filter>
+    		<filter-name>springSecurityFilterChain</filter-name>
+    		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+   </filter>
+ 
+   <filter-mapping>
+   		<filter-name>springSecurityFilterChain</filter-name>
+    		<url-pattern>/*</url-pattern>
+   </filter-mapping> 
+    
 </web-app>
 ```
+

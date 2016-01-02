@@ -1,27 +1,12 @@
 ##What we will do:
-- Add a navigation bar
-- Use JSP Fragments
-
-- Exercise : Align the login & welcome pages.
-- Exercise : Highlight the correct menu item.
+- Prepare for Using Spring Security
+- Remove All the Login Related Functionality
+- Make Welcome the default page - with some hardcoding to start with.
+- Refactor getLoggedInUserName
+- Update Home Page Link in navigation
 
 ## Useful Snippets
 ```
-<nav role="navigation" class="navbar navbar-default">
-
-	<div class="">
-		<a href="/" class="navbar-brand">in28Minutes</a>
-	</div>
-
-	<div class="navbar-collapse">
-		<ul class="nav navbar-nav">
-			<li class="active"><a href="/login">Home</a></li>
-			<li><a href="/list-todos">Todos</a></li>
-			<li><a href="http://www.in28minutes.com">In28Minutes</a></li>
-		</ul>
-	</div>
-
-</nav>
 ```
 
 ## Files List
@@ -122,7 +107,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
@@ -132,19 +116,9 @@ public class LoginController {
 	@Autowired
 	private LoginService loginService;
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String showLoginPage() {
-		return "login";
-	}
-
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String handleUserLogin(ModelMap model, @RequestParam String name,
-			@RequestParam String password) {
-		if (!loginService.validateUser(name, password)) {
-			model.put("errorMessage", "Invalid Credentials");
-			return "login";
-		}
-		model.put("name", name);
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String showWelcomePage(ModelMap model) {
+		model.put("name", "in28Minutes");
 		return "welcome";
 	}
 }
@@ -371,7 +345,7 @@ public class TodoController {
 
 	@RequestMapping(value = "/list-todos", method = RequestMethod.GET)
 	public String showTodosList(ModelMap model) {
-		String user = (String) model.get("name");
+		String user = getLoggedInUserName(model);
 		model.addAttribute("todos", service.retrieveTodos(user));
 		return "list-todos";
 	}
@@ -388,10 +362,14 @@ public class TodoController {
 		if (result.hasErrors())
 			return "todo";
 
-		service.addTodo((String) model.get("name"), todo.getDesc(),
+		service.addTodo(getLoggedInUserName(model), todo.getDesc(),
 				todo.getTargetDate(), false);
 		model.clear();// to prevent request parameter "name" to be passed
 		return "redirect:/list-todos";
+	}
+
+	private String getLoggedInUserName(ModelMap model) {
+		return (String) model.get("name");
 	}
 
 	@RequestMapping(value = "/update-todo", method = RequestMethod.GET)
@@ -406,7 +384,7 @@ public class TodoController {
 		if (result.hasErrors())
 			return "todo";
 
-		todo.setUser((String) model.get("name"));
+		todo.setUser(getLoggedInUserName(model));
 		service.updateTodo(todo);
 
 		model.clear();// to prevent request parameter "name" to be passed
@@ -490,14 +468,13 @@ log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
 <nav role="navigation" class="navbar navbar-default">
 
 	<div class="">
-		<a href="/" class="navbar-brand">in28Minutes</a>
+		<a href="http://www.in28minutes.com" class="navbar-brand">in28Minutes</a>
 	</div>
 
 	<div class="navbar-collapse">
 		<ul class="nav navbar-nav">
-			<li class="active"><a href="/login">Home</a></li>
+			<li class="active"><a href="/">Home</a></li>
 			<li><a href="/list-todos">Todos</a></li>
-			<li><a href="http://www.in28minutes.com">In28Minutes</a></li>
 		</ul>
 	</div>
 
@@ -538,30 +515,6 @@ log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
 		<a type="button" class="btn btn-success" href="/add-todo">Add</a>
 	</div>
 </div>
-<%@ include file="common/footer.jspf"%>
-```
-### /src/main/webapp/WEB-INF/views/login.jsp
-```
-<%@ include file="common/header.jspf"%>
-<%@ include file="common/navigation.jspf"%>
-<div class="container">
-	<p>
-		<font color="red">${errorMessage}</font>
-	</p>
-	<form action="/login" method="POST">
-		<fieldset class="form-group">
-			<label>Name</label> <input name="name" type="text"
-				class="form-control" />
-		</fieldset>
-		<fieldset class="form-group">
-			<label>Password</label> <input name="password" type="password"
-				class="form-control" />
-		</fieldset>
-		<button type="submit" class="btn btn-success">Submit</button>
-	</form>
-
-</div>
-
 <%@ include file="common/footer.jspf"%>
 ```
 ### /src/main/webapp/WEB-INF/views/todo.jsp
