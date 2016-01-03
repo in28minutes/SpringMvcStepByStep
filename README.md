@@ -2,11 +2,11 @@
 # First Spring MVC Application in 25 Easy Steps
 ## Spring MVC Tutorial for Beginners
 
+* [Running examples](#running-examples)
 * [Course Overview](#course-overview)
   - Steps 1 to 7 : Build a normal Web Application
   - Steps 11 to 37 : Use Spring MVC to Build Your First Web Application
   - [Step wise details](#step-wise-details)
-  - [Running examples](#running-examples)
   - [Exercises](#exercises)
 * [About in28Minutes](#about-in28minutes)
   - [Our Beliefs](#our-beliefs)
