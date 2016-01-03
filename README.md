@@ -3,9 +3,9 @@
 ## Spring MVC Tutorial for Beginners
 
 * [Course Overview](#course-overview)
-  - [Steps 1 to 7 : Build a normal Web Application](#Steps 1 to 7 : Build a normal Web Application)
-  - [Steps 11 to XX : Use Spring MVC to Build Your First Web Application](#Steps 11 to XX : Use Spring MVC to Build Your First Web Application)
-  - [Step wise details](#Step wise details)
+  - [Steps 1 to 7 : Build a normal Web Application](#Steps-1-to-7-:-Build-a-normal-Web-Application)
+  - [Steps 11 to XX : Use Spring MVC to Build Your First Web Application](#Steps-11-to-XX-:-Use-Spring-MVC-to-Build-Your-First-Web-Application)
+  - [Step wise details](#Step-wise-details)
   - [Running examples](#running-examples)
   - [Exercises](#exercises)
 * [About in28Minutes](#about-in28minutes)
