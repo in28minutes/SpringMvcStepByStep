@@ -8,30 +8,25 @@ https://github.com/in28minutes/SpringIn28Minutes/blob/master/InstallationGuide-J
 
 ##Course Overview
 ###Steps 1 to 7 : Build a normal Web Application
-- Understand Basics of HTTP - HttpRequest - GET/POST, Request Parameters
-- Introduction to JSP, Servlets, JSTL, Scriptlets and EL.
+- Understand Basics of HTTP 
+- HttpRequest - GET/POST, Request Parameters
+- HTTP Response - Response Status - 404,200,500 etc
+- Introduction to JSP, Servlets,  Scriptlets and EL
+- HTML Form -  Method, Action & Form Data
 - Understand Basics of using Maven, Tomcat and Eclipse
+- Using Request Attributes for passing Model between Servlet and View
 
 ###Steps 11 to XX : Use Spring MVC to Build Your First Web Application
 - DispatcherServlet
-- Model, Controllers, ViewResolver and Interceptors 
+- Basic Todo Management Application with Login/Logout
+- Model, Controllers, ViewResolver and Filters 
 - Forms - DataBinding, Validation
 - Annotation based approach - @RequestParam, @PathVariable, @ModelAttribute, @SessionAttributes etc
 - Bootstrap to style the page
 - Spring Security
-- Internationalization - Validation Messages
+- Internationalization
 - Exception Handling
 - Basic REST Services
-- Session Timeouts
-- Property Files
-- Logout
-```
-@RequestMapping("/logout")
-public String logout(SessionStatus status){
-  status.setComplete();
-  return "login";
-}
-```
 
 ##Our Approach
 - Instead of taking traditional approach, feature-by-feature, we will take a problem-solution step-by-step approach. 
@@ -53,10 +48,6 @@ public String logout(SessionStatus status){
 - Step05.md : Lets add a form
 - Step06.md :	New Form and doPost
 - Step07.md :	Adding Password, validation of userid/password
-- Step11.md : Up and Running with Spring MVC
-- Step12.md : First Spring Controller
-- Step13.md	: Displaying a View - View Resolver
-- Step14.md	: Understand a Little Bit of Theory Behind Spring MVC
 
 ##Exercises
 - Split TodoController into different Controllers
