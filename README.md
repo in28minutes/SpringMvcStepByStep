@@ -18,16 +18,8 @@
 https://github.com/in28minutes/SpringIn28Minutes/blob/master/InstallationGuide-JavaEclipseAndMaven_v2.pdf
 
 ##Course Overview
-###Steps 1 to 7 - Build a normal Web Application
-- Understand Basics of HTTP 
-- HttpRequest - GET/POST, Request Parameters
-- HTTP Response - Response Status - 404,200,500 etc
-- Introduction to JSP, Servlets,  Scriptlets and EL
-- HTML Form -  Method, Action & Form Data
-- Understand Basics of using Maven, Tomcat and Eclipse
-- Using Request Attributes for passing Model between Servlet and View
 
-###Steps 11 to XX : Use Spring MVC to Build Your First Web Application
+You will learn about
 - DispatcherServlet
 - Basic Todo Management Application with Login/Logout
 - Model, Controllers, ViewResolver and Filters 
@@ -38,6 +30,44 @@ https://github.com/in28minutes/SpringIn28Minutes/blob/master/InstallationGuide-J
 - Internationalization
 - Exception Handling
 - Basic REST Services
+
+###Steps 1 to 7 - Build a normal Web Application
+- Understand Basics of HTTP 
+- HttpRequest - GET/POST, Request Parameters
+- HTTP Response - Response Status - 404,200,500 etc
+- Introduction to JSP, Servlets,  Scriptlets and EL
+- HTML Form -  Method, Action & Form Data
+- Understand Basics of using Maven, Tomcat and Eclipse
+- Using Request Attributes for passing Model between Servlet and View
+
+###Steps 11 to XX : Use Spring MVC to Build Your First Web Application
+- Step 11 : Configure application to use Spring MVC
+- Step 12 : First Spring MVC Controller, @ResponseBody, @Controller
+- Step 13 : Redirect to Login JSP - LoginController, @ResponseBody and View Resolver
+- Step 14 : DispatcherServlet and Log4j
+- Step 15 : Show userid and password on the welcome page - ModelMap and @RequestParam 
+- Step 16 : LoginService and Remove all JEE Servlets based code
+- Step 17 : Spring Auto-wiring and Dependency Management - @Autowired and @Service
+- Step 18 : Create TodoController and list-todos.jsp. Make TodoService a @Service and inject it.
+- Step 19 : Add Todo model object. Create TodoService.
+- Step 20 : Create TodoController and  list-todos.jsp
+- Step 21 : Session vs Model vs Request - @SessionAttributes
+- Step 22 : New Todo and redirect to a Controller
+- Step 23 : JSTL
+- Step 24 : Bootstrap - using Webjars
+- Step 25 : Let's delete a Todo
+- Step 26 : Use Bootstrap to format and add HTML5 Validations
+- Step 27 : Introduce JSR 349 Validations using Hibernate Validator - First Command Bean.
+- Step 28 : Let's update a Todo
+- Step 29 : Let's add a Target Date for Todo - Use initBinder to Handle Date Fields
+- Step 30 : Navigation bar and JSP Fragments
+- Step 31 : Let's prepare for Spring Security
+- Step 32 : Initial Setup for Spring Security
+- Step 33 : Refactor and add Logout Functionality using Spring Security
+- Step 34 : Exception Handling in Spring MVC - @ControllerAdvice, @ExceptionHandler and error-page in web.xml
+- Step 35 : Let's add Internationalization - i18n
+- Step 36 : Basic Spring Rest Services - @RestController and jackson-databind
+- Step 37 : More Rest Services - @PathVariable
 
 ##Expectations
 - For taking this course, you should already know Java. 
