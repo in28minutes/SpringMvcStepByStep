@@ -31,7 +31,7 @@ web.xml
 	
 	    <servlet-mapping>
 	        <servlet-name>dispatcher</servlet-name>
-	        <url-pattern>/spring-mvc/</url-pattern>
+	        <url-pattern>/spring-mvc/*</url-pattern>
 	    </servlet-mapping>
 ```
 todo-servlet.xml
@@ -231,7 +231,7 @@ Welcome ${name}
 
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
-        <url-pattern>/spring-mvc/</url-pattern>
+        <url-pattern>/spring-mvc/*</url-pattern>
     </servlet-mapping>
 </web-app>
 ```
