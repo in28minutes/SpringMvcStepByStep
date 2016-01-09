@@ -4,6 +4,20 @@
 - Remove @ResponseBody
 - More about View Resolver
 
+## Snippets
+
+```
+  <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix">
+            <value>/WEB-INF/views/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>
+```
+
 ## Files List
 ### /pom.xml
 ```
