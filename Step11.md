@@ -7,17 +7,16 @@ Before we start with the Flows, we need to configure application to use Spring M
 - DispatcherServlet needs an Spring Application Context to launch. We will create an xml (/WEB-INF/todo-servlet.xml). Mini Step 4: Add Spring Context
 
 ##Useful Snippets
-```
 pom.xml
-~~~~~~~
+```
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>4.2.2.RELEASE</version>
 		</dependency>
-
+```
 web.xml
-~~~~~~~
+```
 	    <servlet>
 	        <servlet-name>dispatcher</servlet-name>
 	        <servlet-class>
@@ -34,9 +33,9 @@ web.xml
 	        <servlet-name>dispatcher</servlet-name>
 	        <url-pattern>/spring-mvc/</url-pattern>
 	    </servlet-mapping>
-
+```
 todo-servlet.xml
-~~~~~~~~~~~~~~~~
+```
 	<beans xmlns="http://www.springframework.org/schema/beans"
 	    xmlns:context="http://www.springframework.org/schema/context"
 	    xmlns:mvc="http://www.springframework.org/schema/mvc"
