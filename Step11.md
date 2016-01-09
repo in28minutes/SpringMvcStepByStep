@@ -1,17 +1,63 @@
-##Todo: 
-- Starting Point - End of Step 7 : Take code from there and make it available in this repo.
-- Add the code from first 7 steps to this repo.
-
-##Flows:
-- Flow 1. Login Servlet -> GET -> login.jsp
-- Flow 2. Login Servlet -> POST (Success) -> welcome.jsp
-- Flow 3. Login Servlet -> POST (Failure) -> login.jsp (with error message)
+##Objective : Configure Spring MVC
 
 Before we start with the Flows, we need to configure application to use Spring MVC
 - Lets do a little bit of Refactoring. Mini Step 1: Rename package webapp to com.in28minutes.jee
 - We need Spring MVC Framework and its dependencies. Mini Step 2 : Add required jars to the project
 - Spring MVC uses Front Controller Pattern -> Dispatcher Servlet. Mini Step 3 : Add Dispatcher Servlet to web.xml
 - DispatcherServlet needs an Spring Application Context to launch. We will create an xml (/WEB-INF/todo-servlet.xml). Mini Step 4: Add Spring Context
+
+##Useful Snippets
+```
+pom.xml
+~~~~~~~
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>4.2.2.RELEASE</version>
+		</dependency>
+
+web.xml
+~~~~~~~
+	    <servlet>
+	        <servlet-name>dispatcher</servlet-name>
+	        <servlet-class>
+	            org.springframework.web.servlet.DispatcherServlet
+	        </servlet-class>
+	        <init-param>
+	            <param-name>contextConfigLocation</param-name>
+	            <param-value>/WEB-INF/todo-servlet.xml</param-value>
+	        </init-param>
+	        <load-on-startup>1</load-on-startup>
+	    </servlet>
+	
+	    <servlet-mapping>
+	        <servlet-name>dispatcher</servlet-name>
+	        <url-pattern>/spring-mvc/</url-pattern>
+	    </servlet-mapping>
+
+todo-servlet.xml
+~~~~~~~~~~~~~~~~
+	<beans xmlns="http://www.springframework.org/schema/beans"
+	    xmlns:context="http://www.springframework.org/schema/context"
+	    xmlns:mvc="http://www.springframework.org/schema/mvc"
+	    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+	    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	    <context:component-scan base-package="com.in28minutes" />
+	
+	    <mvc:annotation-driven />
+	    
+	</beans>
+
+```
+
+
+##Flows:
+- Flow 1. Login Servlet -> GET -> login.jsp
+- Flow 2. Login Servlet -> POST (Success) -> welcome.jsp
+- Flow 3. Login Servlet -> POST (Failure) -> login.jsp (with error message)
 
 ## Files List
 ### /pom.xml
