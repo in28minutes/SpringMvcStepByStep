@@ -416,7 +416,7 @@ public class TodoController {
 		if (result.hasErrors())
 			return "todo";
 
-		todo.setUser((String) model.get("name"));
+		todo.setUser("in28Minutes"); //TODO:Remove Hardcoding Later
 		service.updateTodo(todo);
 
 		model.clear();// to prevent request parameter "name" to be passed

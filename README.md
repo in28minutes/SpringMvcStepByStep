@@ -49,8 +49,8 @@ You will learn about
 - Step 16 : LoginService and Remove all JEE Servlets based code
 - Step 17 : Spring Auto-wiring and Dependency Management - @Autowired and @Service
 - Step 18 : Create TodoController and list-todos.jsp. Make TodoService a @Service and inject it.
-- Step 19 : Add Todo model object. Create TodoService.
-- Step 20 : Create TodoController and  list-todos.jsp
+- Step 19 : Web Application Architecture
+- Step 20 : More about Spring Framework
 - Step 21 : Session vs Model vs Request - @SessionAttributes
 - Step 22 : New Todo and redirect to a Controller
 - Step 23 : JSTL
