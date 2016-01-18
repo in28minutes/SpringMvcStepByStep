@@ -151,3 +151,41 @@ You will learn about
   * Design Patterns
   * 400+ Questions
   * 23 Videos
+
+###Videos
+- Step 10 - 1-Introduction to the Course
+- Step 10 - 2-Overview of the Course
+- Step 10 - 3-Setting up Maven,Tomcat and Simple JEE Application
+- Step 11 - Setting up Spring MVC with 4 mini steps
+- Step 12 - Your First Spring MVC Controller
+- Step 13 - 1-Your First Spring MVC View - ViewResolver
+- Step 13 - 2-Theory Break-Spring MVC Architecture
+- Step 13 - 3-Play Break-Try Breaking Things
+- Step 14 - Add Logging Framework Log4j
+- Step 15 - Redirect to Welcome Page - ModelMap and @RequestParam
+- Step 16 - Use LoginService to Authenticate
+- Step 17 - Spring Autowiring and Dependency Injection
+- Step 18 - Display list of Todo's using TodoService
+- Step 19 - Java Web Application Architecture : Model 1, Model 2 and MVC
+- Step 20 - Spring Modules
+- Step 21 - @SessionAttributes : Session vs Request
+- Step 22 - Add a new Todo : redirect
+- Step 23 - JSTL forEach Tag
+- Step 24 - Bootstrap to Style Our Views
+- Step 25 - Delete Todo Functionality
+- Step 26 - HTML5 Validations and Formatting Todo Form
+- Step 27 - Part 1 : Adding Todo Command Bean
+- Step 27 - Part 2 : Validation using Hibernate Validator
+- Step 28 - Update Todo Functionality
+- Step 29 - Add Target Date Field : initBinder
+- Step 30 - JSP Fragments and Adding a Navigation Bar
+- Step 31 - Preparing for Spring Security
+- Step 32 - Setting up Spring Security
+- Step 33 - Implement Logout Functionality
+- Step 34 - Part 1 : Theory Behind Exception Handing
+- Step 34 - Part 2 : Implementing Exception Handing
+- Step 35 - Internationalization with Spring MVC
+- Step 36 - Basics of Spring Rest Web Services
+- Step 37 - Spring Rest Web Services - @PathParam
+- Step 38 - Conclusion
+
