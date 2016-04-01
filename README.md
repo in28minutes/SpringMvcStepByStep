@@ -1,5 +1,5 @@
 # First Spring MVC Application in 25 Easy Steps
-Welcome to our Course on Spring MVC. Go to [Step wise details](#step-wise-details) to understand all the concepts you would learn in this course. 
+Welcome to our Course on Spring MVC. Go to [Step wise details](#steps-1-to-7---build-a-normal-web-application) to understand all the concepts you would learn in this course. 
 We have all the code at the end of each step in  (Step01.md, Step02.md, Step37.md). Also present are some zip files with code at the end of some steps(Step07.zip to Step37.zip).
 * The First 7 Steps of this course are available for free on YouTube. 
   - https://www.youtube.com/watch?v=BjNhGaZDr0Y
