@@ -2,7 +2,7 @@
 <%@ include file="common/navigation.jspf"%>
 <div class="container">
 	<H1>Add a Todo</H1>
-	<form:form method="post" commandName="todo">
+	<form:form method="post" modelAttribute="todo">
 
 		<form:hidden path="id" />
 
