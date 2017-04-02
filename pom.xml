@@ -2,25 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.in28minutes</groupId>
-	<artifactId>in28Minutes-first-webapp-with-springmvc</artifactId>
+	<artifactId>in28Minutes-first-webapp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-
-	<properties>
-		<spring.version>5.0.0.M2</spring.version>
-	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-framework-bom</artifactId>
-				<version>${spring.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
@@ -39,6 +23,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
+			<version>4.2.2.RELEASE</version>
 		</dependency>
 
 		<dependency>
@@ -58,6 +43,7 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>5.0.2.Final</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.webjars</groupId>
@@ -111,13 +97,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<repositories>
-		<repository>
-			<id>io.spring.repo.maven.milestone</id>
-			<url>http://repo.spring.io/milestone/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 </project>

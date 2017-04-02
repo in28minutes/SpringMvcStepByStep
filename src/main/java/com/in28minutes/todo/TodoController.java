@@ -3,6 +3,7 @@ package com.in28minutes.todo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -103,6 +105,13 @@ public class TodoController {
 		service.deleteTodo(id);
 		model.clear();
 		return "redirect:list-todos";
+	}
+
+	@ExceptionHandler(value = Exception.class)
+	public String handleException(HttpServletRequest request, Exception ex) {
+		logger.error("Request " + request.getRequestURL()
+				+ " Threw an Exception", ex);
+		return "error-specific";
 	}
 
 }
