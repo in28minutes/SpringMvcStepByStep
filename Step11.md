@@ -1,4 +1,4 @@
-##Objective : Configure Spring MVC
+## Objective : Configure Spring MVC
 
 Before we start with the Flows, we need to configure application to use Spring MVC
 - Lets do a little bit of Refactoring. Mini Step 1: Rename package webapp to com.in28minutes.jee
@@ -6,7 +6,7 @@ Before we start with the Flows, we need to configure application to use Spring M
 - Spring MVC uses Front Controller Pattern -> Dispatcher Servlet. Mini Step 3 : Add Dispatcher Servlet to web.xml
 - DispatcherServlet needs an Spring Application Context to launch. We will create an xml (/WEB-INF/todo-servlet.xml). Mini Step 4: Add Spring Context
 
-##Useful Snippets
+## Useful Snippets
 pom.xml
 ```
 		<dependency>
@@ -53,7 +53,7 @@ todo-servlet.xml
 ```
 
 
-##Flows:
+## Flows:
 - Flow 1. Login Servlet -> GET -> login.jsp
 - Flow 2. Login Servlet -> POST (Success) -> welcome.jsp
 - Flow 3. Login Servlet -> POST (Failure) -> login.jsp (with error message)

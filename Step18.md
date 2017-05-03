@@ -1,8 +1,8 @@
-##What we will do:
+## What we will do:
 - Create TodoController and list-todos.jsp
 - Make TodoService a @Service and inject it
 
-###Pending for Next Step
+### Pending for Next Step
 - ${name} is not available in list-todos.jsp
 - in28Minutes is hardcoded in TodoController
 

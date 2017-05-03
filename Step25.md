@@ -1,4 +1,4 @@
-##What we will do:
+## What we will do:
 - Add functionality to delete a todo
 
 ## Useful Snippets

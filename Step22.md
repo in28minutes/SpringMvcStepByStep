@@ -1,4 +1,4 @@
-##What we will do:
+## What we will do:
 - Add Facility to add New Todo
 - todo.jsp
 - Importance of redirect:/list-todos

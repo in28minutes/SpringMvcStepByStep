@@ -1,4 +1,4 @@
-##What we will do:
+## What we will do:
 - Use LoginService to validate userid and password.
 - Remove all the old controller code and lets use only Spring MVC here on. 
 - For now : We are not using Spring Autowiring for LoginService.

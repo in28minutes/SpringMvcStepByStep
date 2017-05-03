@@ -1,4 +1,4 @@
-##What we will do:
+## What we will do:
 - Add bootstrap to give basic formatting to the page : We use bootstrap classes container,table and table-striped.
 - We will use webjars
 

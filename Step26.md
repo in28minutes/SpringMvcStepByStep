@@ -1,4 +1,4 @@
-##What we will do:
+## What we will do:
 In this short step:
 - Format Add Todo Page
 - Add Html5 Form Validations

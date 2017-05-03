@@ -1,4 +1,4 @@
-##What we will do:
+## What we will do:
 - Basic Exception Handling
 - Exception Handling is a cross cutting concern
 - Do not handle exceptions in Controllers or Services, if you cannot add value to them.

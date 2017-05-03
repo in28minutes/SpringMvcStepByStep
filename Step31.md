@@ -1,4 +1,4 @@
-##What we will do:
+## What we will do:
 - Prepare for Using Spring Security
 - Remove All the Login Related Functionality
 - Make Welcome the default page - with some hardcoding to start with.

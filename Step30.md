@@ -1,4 +1,4 @@
-##What we will do:
+## What we will do:
 - Add a navigation bar
 - Use JSP Fragments
 - Exercise : Align the login & welcome pages.

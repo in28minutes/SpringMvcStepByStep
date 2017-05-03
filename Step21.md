@@ -1,4 +1,4 @@
-##What we will do:
+## What we will do:
 - Session vs Model vs Request.
 - Be cautious about what you use Session for.
 - @SessionAttributes("name") and how it works?

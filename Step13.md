@@ -1,4 +1,4 @@
-##Redirect to Login JSP
+## Redirect to Login JSP
 - View Resolver in todo-servlet.xml
 - Update LoginController
 - Remove @ResponseBody

@@ -1,4 +1,4 @@
-##What we will do:
+## What we will do:
 - Lets use a command bean for Todo
 - Add Validations
 - The JSR 303 and JSR 349 defines specification for the Bean Validation API (version 1.0 and 1.1, respectively), and Hibernate Validator is the reference implementation.

@@ -1,8 +1,8 @@
-##What we want to do:
+## What we want to do:
 - Understand importance of DispatcherServlet.
 - Add Logging Framework Log4j to understand the flow much more. 
 
-##Spring MVC Request Flow
+## Spring MVC Request Flow
 - DispatcherServlet receives HTTP Request. 
 - DispatcherServlet identifies the right Controller based on the URL.
 - Controller executes Business Logic.
