@@ -4,6 +4,8 @@ http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.ht
 ## Architecture Diagram
 http://docs.spring.io/spring/docs/current/spring-framework-reference/html/images/mvc.png
 
+Added Comment By Shashank
+
 ## Dispatcher Servlet
 - Dispatches requests to handlers, with configurable handler mappings
 - View Resolution
