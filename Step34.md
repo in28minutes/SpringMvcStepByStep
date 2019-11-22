@@ -22,7 +22,7 @@ public class ExceptionController {
 }
 
 <error-page>
-	    <location>/WEB-INF/views/jsp/error.jsp</location>
+	    <location>/WEB-INF/views/error.jsp</location>
 </error-page>
 ```
 
