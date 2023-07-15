@@ -7,7 +7,7 @@
 ```     
 		<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
-		<form:form action="/add-todo" method="post" commandName="todo">
+		<form:form action="/add-todo" method="post" modelAttribute="todo">
 			<fieldset class="form-group">
 				<form:label path="desc">Description</form:label>
 				<form:input path="desc" type="text" class="form-control" required="required"/>
@@ -487,7 +487,7 @@ log4j.appender.Appender1.layout.ConversionPattern=%-7p %d [%t] %c %x - %m%n
 <body>
 
 	<div class="container">
-		<form:form method="post" commandName="todo">
+		<form:form method="post" modelAttribute="todo">
 			<fieldset class="form-group">
 				<form:label path="desc">Description</form:label>
 				<form:input path="desc" type="text" class="form-control"
