@@ -12,6 +12,8 @@ public class ExceptionController {
 
 	private Log logger = LogFactory.getLog(ExceptionController.class);
 
+private String str = "abc";
+
 	@ExceptionHandler(value = Exception.class)
 	public String handleException(HttpServletRequest request, Exception ex) {
 		logger.error("Request " + request.getRequestURL()
